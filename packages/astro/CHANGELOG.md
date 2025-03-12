@@ -1,5 +1,87 @@
 # astro
 
+## 5.5.0
+
+### Minor Changes
+
+- [#13352](https://github.com/withastro/astro/pull/13352) [`cb886dc`](https://github.com/withastro/astro/commit/cb886dcde6c28acca286a66be46228a4d4cc52e7) Thanks [@delucis](https://github.com/delucis)! - Adds support for a new `experimental.headingIdCompat` flag
+
+  By default, Astro removes a trailing `-` from the end of IDs it generates for headings ending with
+  special characters. This differs from the behavior of common Markdown processors.
+
+  You can now disable this behavior with a new configuration flag:
+
+  ```js
+  // astro.config.mjs
+  import { defineConfig } from 'astro/config';
+
+  export default defineConfig({
+    experimental: {
+      headingIdCompat: true,
+    },
+  });
+  ```
+
+  This can be useful when heading IDs and anchor links need to behave consistently across your site
+  and other platforms such as GitHub and npm.
+
+  If you are [using the `rehypeHeadingIds` plugin directly](https://docs.astro.build/en/guides/markdown-content/#heading-ids-and-plugins), you can also pass this new option:
+
+  ```js
+  // astro.config.mjs
+  import { defineConfig } from 'astro/config';
+  import { rehypeHeadingIds } from '@astrojs/markdown-remark';
+  import { otherPluginThatReliesOnHeadingIDs } from 'some/plugin/source';
+
+  export default defineConfig({
+    markdown: {
+      rehypePlugins: [
+        [rehypeHeadingIds, { experimentalHeadingIdCompat: true }],
+        otherPluginThatReliesOnHeadingIDs,
+      ],
+    },
+  });
+  ```
+
+- [#13311](https://github.com/withastro/astro/pull/13311) [`a3327ff`](https://github.com/withastro/astro/commit/a3327ffbe6373228339824684eaa6f340a20a32e) Thanks [@chrisirhc](https://github.com/chrisirhc)! - Adds a new configuration option for Markdown syntax highlighting `excludeLangs`
+
+  This option provides better support for diagramming tools that rely on Markdown code blocks, such as Mermaid.js and D2 by allowing you to exclude specific languages from Astro's default syntax highlighting.
+
+  This option allows you to avoid rendering conflicts with tools that depend on the code not being highlighted without forcing you to disable syntax highlighting for other code blocks.
+
+  The default value for `excludeLangs` is `['math']` and remains unchanged by default in this release.
+  But users can now override it to exclude other languages or exclude no languages.
+
+  The following example configuration will exclude highlighting for `mermaid` and `math` code blocks:
+
+  ```js
+  import { defineConfig } from 'astro/config';
+
+  export default defineConfig({
+    markdown: {
+      syntaxHighlight: {
+        type: 'shiki',
+        excludeLangs: ['mermaid', 'math'],
+      },
+    },
+  });
+  ```
+
+### Patch Changes
+
+- [#13404](https://github.com/withastro/astro/pull/13404) [`4e78b4d`](https://github.com/withastro/astro/commit/4e78b4d10d2214c94752a1fef74db325053cf071) Thanks [@ascorbic](https://github.com/ascorbic)! - Fixes a bug in error handling that saving a content file with a schema error would display an "unhandled rejection" error instead of the correct schema error
+
+- [#13379](https://github.com/withastro/astro/pull/13379) [`d59eb22`](https://github.com/withastro/astro/commit/d59eb227334b788289533bac41f015b498179a2f) Thanks [@martrapp](https://github.com/martrapp)! - Fixes an edge case where the client router executed scripts twice when used with a custom swap function that only swaps parts of the DOM.
+
+- [#13393](https://github.com/withastro/astro/pull/13393) [`6b8fdb8`](https://github.com/withastro/astro/commit/6b8fdb8a113b6f76448b41beb990c33fafb09b3e) Thanks [@renovate](https://github.com/apps/renovate)! - Updates `primsjs` to version 1.30.0, which adds support for more languages and fixes a security advisory which does not affect Astro.
+
+- [#13374](https://github.com/withastro/astro/pull/13374) [`7b75bc5`](https://github.com/withastro/astro/commit/7b75bc5c36bc338bcef5ef41502e87c184c117ec) Thanks [@ArmandPhilippot](https://github.com/ArmandPhilippot)! - Fixes the documentation of the i18n configuration where `manual` was presented as a key of `routing` instead of an available value.
+
+- [#13380](https://github.com/withastro/astro/pull/13380) [`9bfa6e6`](https://github.com/withastro/astro/commit/9bfa6e6d8b95424436be405a80d5df3f2e2e72df) Thanks [@martrapp](https://github.com/martrapp)! - Fixes an issue where astro:page-load fires before all scripts are executed
+
+- Updated dependencies [[`cb886dc`](https://github.com/withastro/astro/commit/cb886dcde6c28acca286a66be46228a4d4cc52e7), [`a3327ff`](https://github.com/withastro/astro/commit/a3327ffbe6373228339824684eaa6f340a20a32e)]:
+  - @astrojs/markdown-remark@6.3.0
+
 ## 5.4.3
 
 ### Patch Changes
